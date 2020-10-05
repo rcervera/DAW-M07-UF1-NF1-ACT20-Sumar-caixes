@@ -1,6 +1,6 @@
 <html>
 <body>
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
 <select name="numero">
 <?php
    for($x=2; $x<11; $x++) {
@@ -15,10 +15,20 @@
 
 <?php
     if(isset($_REQUEST['numero'])) {
-        echo "<form method='post' action='".$_SERVER['PHP_SELF']."?numero=".$_REQUEST['numero']."'> ";
-        for($i=0;$i<$_REQUEST['numero'];$i++) {
+        $numero = htmlspecialchars($_REQUEST['numero']);
+        
+        // per seguretat comprovem que el número de caixes estigui
+        // entre 1 i 10.
+        if($numero<1 || $numero>10) {
+            echo "El valor de N ha der ser un número entre 1 i 10";
+            exit;
+        }
 
-            if(isset($_REQUEST['caixa'][$i]))  echo "<input type='text' value='".$_REQUEST['caixa'][$i]."' name='caixa[]'><br>";
+        echo "<form method='post' action='".htmlspecialchars($_SERVER['PHP_SELF'])."?numero=".$numero."'> ";
+        for($i=0;$i<$numero;$i++) {
+
+            if(isset($_REQUEST['caixa'][$i]))  
+               echo "<input type='text' value='".htmlspecialchars($_REQUEST['caixa'][$i])."' name='caixa[]'><br>";
             else echo "<input type='text' name='caixa[]'><br>";
         }
         echo "<input type='submit' value='Sumar' name='sumar'>";
